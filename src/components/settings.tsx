@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { IconButton } from "./iconButton";
 import { TextButton } from "./textButton";
 import { Message } from "@/features/messages/messages";
@@ -10,8 +10,10 @@ import {
   PRESET_D,
 } from "@/features/constants/koeiroParam";
 import { Link } from "./link";
+import { ChatEngine } from "@/features/chat/chat";
 
 type Props = {
+  chatEngine: ChatEngine;
   openAiKey: string;
   systemPrompt: string;
   chatLog: Message[];
@@ -26,8 +28,10 @@ type Props = {
   onClickResetChatLog: () => void;
   onClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onLoad: () => Promise<void>;
 };
 export const Settings = ({
+  chatEngine,
   openAiKey,
   chatLog,
   systemPrompt,
@@ -42,43 +46,58 @@ export const Settings = ({
   onClickResetChatLog,
   onClickResetSystemPrompt,
   onChangeKoeiromapKey,
+  onLoad,
 }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleClickCloseButton = useCallback(async () => {
+    setIsLoading(true);
+    await onLoad();
+    onClickClose();
+    setIsLoading(false);
+  }, [onClickClose, onLoad]);
+
   return (
     <div className="absolute z-40 w-full h-full bg-white/80 backdrop-blur ">
       <div className="absolute m-24">
         <IconButton
           iconName="24/Close"
           isProcessing={false}
-          onClick={onClickClose}
+          onClick={handleClickCloseButton}
+          disabled={isLoading}
         ></IconButton>
       </div>
       <div className="max-h-full overflow-auto">
         <div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
           <div className="my-24 typography-32 font-bold">設定</div>
-          <div className="my-24">
-            <div className="my-16 typography-20 font-bold">OpenAI API キー</div>
-            <input
-              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
-              type="text"
-              placeholder="sk-..."
-              value={openAiKey}
-              onChange={onChangeAiKey}
-            />
-            <div>
-              APIキーは
-              <Link
-                url="https://platform.openai.com/account/api-keys"
-                label="OpenAIのサイト"
+          {chatEngine === "OpenAI" && (
+            <div className="my-24">
+              <div className="my-16 typography-20 font-bold">
+                OpenAI API キー
+              </div>
+              <input
+                className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+                type="text"
+                placeholder="sk-..."
+                value={openAiKey}
+                onChange={onChangeAiKey}
+                disabled={isLoading}
               />
-              で取得できます。取得したAPIキーをフォームに入力してください。
+              <div>
+                APIキーは
+                <Link
+                  url="https://platform.openai.com/account/api-keys"
+                  label="OpenAIのサイト"
+                />
+                で取得できます。取得したAPIキーをフォームに入力してください。
+              </div>
+              <div className="my-16">
+                ChatGPT
+                APIはブラウザから直接アクセスしています。また、APIキーや会話内容はピクシブのサーバには保存されません。
+                <br />
+                ※利用しているモデルはChatGPT API (GPT-3.5)です。
+              </div>
             </div>
-            <div className="my-16">
-              ChatGPT
-              APIはブラウザから直接アクセスしています。また、APIキーや会話内容はピクシブのサーバには保存されません。
-              <br />
-              ※利用しているモデルはChatGPT API (GPT-3.5)です。
-            </div>
-          </div>
+          )}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">
               キャラクターモデル
@@ -101,6 +120,7 @@ export const Settings = ({
               value={systemPrompt}
               onChange={onChangeSystemPrompt}
               className="px-16 py-8  bg-surface1 hover:bg-surface1-hover h-168 rounded-8 w-full"
+              disabled={isLoading}
             ></textarea>
           </div>
           <div className="my-40">
