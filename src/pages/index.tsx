@@ -153,18 +153,22 @@ export default function Home() {
 
           receivedMessage += value;
 
-          // 返答内容のタグ部分の検出
-          const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
-          if (tagMatch && tagMatch[0]) {
-            tag = tagMatch[0];
-            receivedMessage = receivedMessage.slice(tag.length);
-          }
+          while (receivedMessage) {
+            // 返答内容のタグ部分の検出
+            const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
+            if (tagMatch && tagMatch[0]) {
+              tag = tagMatch[0];
+              receivedMessage = receivedMessage.slice(tag.length);
+            }
 
-          // 返答を一文単位で切り出して処理する
-          const sentenceMatch = receivedMessage.match(
-            /^(.+[。．！？\n]|.{10,}[、,])/
-          );
-          if (sentenceMatch && sentenceMatch[0]) {
+            // 返答を一文単位で切り出して処理する
+            const sentenceMatch = receivedMessage.match(
+              /^(.+[。．！？.!?\n]|.{10,}[、,])/
+            );
+            if (!sentenceMatch || !sentenceMatch[0]) {
+              break;
+            }
+
             const sentence = sentenceMatch[0];
             sentences.push(sentence);
             receivedMessage = receivedMessage
