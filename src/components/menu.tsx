@@ -6,8 +6,10 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import { Settings } from "./settings";
 import { ViewerContext } from "@/features/vrmViewer/viewerContext";
 import { AssistantText } from "./assistantText";
+import { ChatEngine } from "@/features/chat/chat";
 
 type Props = {
+  chatEngine: ChatEngine;
   openAiKey: string;
   systemPrompt: string;
   chatLog: Message[];
@@ -21,8 +23,10 @@ type Props = {
   handleClickResetChatLog: () => void;
   handleClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (key: string) => void;
+  onLoad: () => Promise<void>;
 };
 export const Menu = ({
+  chatEngine,
   openAiKey,
   systemPrompt,
   chatLog,
@@ -36,6 +40,7 @@ export const Menu = ({
   handleClickResetChatLog,
   handleClickResetSystemPrompt,
   onChangeKoeiromapKey,
+  onLoad,
 }: Props) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showChatLog, setShowChatLog] = useState(false);
@@ -129,12 +134,15 @@ export const Menu = ({
       {showChatLog && <ChatLog messages={chatLog} />}
       {showSettings && (
         <Settings
+          chatEngine={chatEngine}
           openAiKey={openAiKey}
           chatLog={chatLog}
           systemPrompt={systemPrompt}
           koeiroParam={koeiroParam}
           koeiromapKey={koeiromapKey}
-          onClickClose={() => setShowSettings(false)}
+          onClickClose={() => {
+            setShowSettings(false);
+          }}
           onChangeAiKey={handleAiKeyChange}
           onChangeSystemPrompt={handleChangeSystemPrompt}
           onChangeChatLog={onChangeChatLog}
@@ -143,6 +151,7 @@ export const Menu = ({
           onClickResetChatLog={handleClickResetChatLog}
           onClickResetSystemPrompt={handleClickResetSystemPrompt}
           onChangeKoeiromapKey={handleChangeKoeiromapKey}
+          onLoad={onLoad}
         />
       )}
       {!showChatLog && assistantMessage && (
