@@ -43,11 +43,8 @@ export const useGeminiNanoChat = () => {
       throw Error("Gemini Nano is not ready");
     }
 
-    setSession(
-      await window.ai.languageModel.create({
-        systemPrompt,
-      })
-    );
+    const options = systemPrompt ? { systemPrompt } : {};
+    setSession(await window.ai.languageModel.create(options));
   }, []);
 
   const getChatResponseStream = useCallback(
