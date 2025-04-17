@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "echo 'linter is not ready'"
   },
   "dependencies": {
     "@charcoal-ui/icons": "^2.6.0",

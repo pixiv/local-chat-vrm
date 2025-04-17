@@ -43,11 +43,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    process.nextTick(() =>
-      window.localStorage.setItem(
-        "chatVRMParams",
-        JSON.stringify({ systemPrompt, koeiroParam, chatLog })
-      )
+    window.localStorage.setItem(
+      "chatVRMParams",
+      JSON.stringify({ systemPrompt, koeiroParam, chatLog })
     );
   }, [systemPrompt, koeiroParam, chatLog]);
 
