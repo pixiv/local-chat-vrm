@@ -34,7 +34,7 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
 
   public constructor(
     parser: GLTFParser,
-    options?: VRMAnimationLoaderPluginOptions
+    _options?: VRMAnimationLoaderPluginOptions
   ) {
     this.parser = parser;
   }
