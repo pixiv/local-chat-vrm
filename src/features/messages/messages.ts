@@ -1,4 +1,4 @@
-import { VRMExpression, VRMExpressionPresetName } from "@pixiv/three-vrm";
+import { VRMExpressionPresetName } from "@pixiv/three-vrm";
 import { KoeiroParam } from "../constants/koeiroParam";
 
 // ChatGPT API
