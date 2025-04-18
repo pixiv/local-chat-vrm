@@ -93,7 +93,7 @@ export const useOpenAiChat = () => {
               for (const chunk of chunks) {
                 const json = JSON.parse(chunk);
                 const messagePiece = json.choices[0].delta.content;
-                if (!!messagePiece) {
+                if (messagePiece) {
                   controller.enqueue(messagePiece);
                 }
               }

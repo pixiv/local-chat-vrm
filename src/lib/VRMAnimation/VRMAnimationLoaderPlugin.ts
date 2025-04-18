@@ -34,7 +34,7 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
 
   public constructor(
     parser: GLTFParser,
-    options?: VRMAnimationLoaderPluginOptions
+    _options?: VRMAnimationLoaderPluginOptions
   ) {
     this.parser = parser;
   }
@@ -98,7 +98,6 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
   ): VRMAnimationLoaderPluginNodeMap {
     const humanoidIndexToName: Map<number, VRMHumanBoneName> = new Map();
     const expressionsIndexToName: Map<number, string> = new Map();
-    let lookAtIndex: number | null;
 
     // humanoid
     const humanBones = defExtension.humanoid?.humanBones;
@@ -130,7 +129,7 @@ export class VRMAnimationLoaderPlugin implements GLTFLoaderPlugin {
     }
 
     // lookAt
-    lookAtIndex = defExtension.lookAt?.node ?? null;
+    const lookAtIndex = defExtension.lookAt?.node ?? null;
 
     return { humanoidIndexToName, expressionsIndexToName, lookAtIndex };
   }
