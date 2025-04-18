@@ -1,5 +1,3 @@
-import { buildUrl } from "@/utils/buildUrl";
-
 export const GitHubLink = () => {
   return (
     <div className="absolute right-0 z-10 m-24">
@@ -14,7 +12,7 @@ export const GitHubLink = () => {
             alt="https://github.com/pixiv/ChatVRM"
             height={24}
             width={24}
-            src={buildUrl("/github-mark-white.svg")}
+            src={"/github-mark-white.svg"}
           ></img>
           <div className="mx-4 text-white font-bold">Fork me</div>
         </div>
