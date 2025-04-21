@@ -12,7 +12,7 @@ export const GitHubLink = () => {
             alt="https://github.com/pixiv/ChatVRM"
             height={24}
             width={24}
-            src={"/github-mark-white.svg"}
+            src={"./github-mark-white.svg"}
           ></img>
           <div className="mx-4 text-white font-bold">Fork me</div>
         </div>
