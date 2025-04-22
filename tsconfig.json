@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "es2015",
+    "module": "es2020",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,

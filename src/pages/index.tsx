@@ -4,6 +4,7 @@ import { ViewerContext } from "@/features/vrmViewer/viewerContext";
 import {
   Message,
   textsToScreenplay,
+  DEFAULT_VOICE_ENGINE,
   Screenplay,
 } from "@/features/messages/messages";
 import { speakCharacter } from "@/features/messages/speakCharacter";
@@ -21,6 +22,7 @@ export default function Home() {
 
   const [loadingRequired, setLoadingRequired] = useState(true);
   const [chatEngine] = useState(DEFAULT_CHAT_ENGINE);
+  const [voiceEngine] = useState(DEFAULT_VOICE_ENGINE);
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
   const [openAiKey, setOpenAiKey] = useState("");
   const [koeiromapKey, setKoeiromapKey] = useState("");
@@ -86,9 +88,12 @@ export default function Home() {
       return;
     }
 
-    await loadChatModel(chatEngine, systemPrompt);
+    await Promise.all([
+      loadChatModel(chatEngine, systemPrompt),
+      speakCharacter.load(voiceEngine),
+    ]);
     setLoadingRequired(false);
-  }, [chatEngine, loadChatModel, loadingRequired, systemPrompt]);
+  }, [chatEngine, voiceEngine, loadChatModel, loadingRequired, systemPrompt]);
 
   /**
    * 文ごとに音声を直列でリクエストしながら再生する
@@ -99,7 +104,7 @@ export default function Home() {
       onStart?: () => void,
       onEnd?: () => void
     ) => {
-      speakCharacter(screenplay, viewer, koeiromapKey, onStart, onEnd);
+      speakCharacter.speak(screenplay, viewer, koeiromapKey, onStart, onEnd);
     },
     [viewer, koeiromapKey]
   );
@@ -144,6 +149,7 @@ export default function Home() {
       let aiTextLog = "";
       let tag = "";
       const sentences = new Array<string>();
+
       try {
         while (true) {
           const { done, value } = await reader.read();
@@ -184,7 +190,11 @@ export default function Home() {
             }
 
             const aiText = `${tag} ${sentence}`;
-            const aiTalks = textsToScreenplay([aiText], koeiroParam);
+            const aiTalks = textsToScreenplay(
+              voiceEngine,
+              [aiText],
+              koeiroParam
+            );
             aiTextLog += aiText;
 
             // 文ごとに音声を生成 & 再生、返答を表示
@@ -215,6 +225,7 @@ export default function Home() {
       chatLog,
       getChatResponseStream,
       chatEngine,
+      voiceEngine,
       koeiroParam,
       handleSpeakAi,
     ]
@@ -226,6 +237,7 @@ export default function Home() {
       <Introduction
         chatEngine={chatEngine}
         openAiKey={openAiKey}
+        voiceEngine={voiceEngine}
         koeiroMapKey={koeiromapKey}
         onChangeAiKey={handleChangeOpenAiKey}
         onChangeKoeiromapKey={setKoeiromapKey}
@@ -243,6 +255,7 @@ export default function Home() {
         chatLog={chatLog}
         koeiroParam={koeiroParam}
         assistantMessage={assistantMessage}
+        voiceEngine={voiceEngine}
         koeiromapKey={koeiromapKey}
         onChangeAiKey={setOpenAiKey}
         onChangeSystemPrompt={handleChangeSystemPrompt}
