@@ -1,12 +1,12 @@
 import { reduceTalkStyle } from "@/utils/reduceTalkStyle";
-import { koeiromapV0 } from "../koeiromap/koeiromap";
-import { TalkStyle } from "../messages/messages";
+import { koeiromapV0 } from "./koeiromap";
+import { KoeiromapTalkStyle } from "../messages/messages";
 
 export async function synthesizeVoice(
   message: string,
   speakerX: number,
   speakerY: number,
-  style: TalkStyle
+  style: KoeiromapTalkStyle
 ) {
   const koeiroRes = await koeiromapV0(message, speakerX, speakerY, style);
   return { audio: koeiroRes.audio };
@@ -16,7 +16,7 @@ export async function synthesizeVoiceApi(
   message: string,
   speakerX: number,
   speakerY: number,
-  style: TalkStyle,
+  style: KoeiromapTalkStyle,
   apiKey: string
 ) {
   // Free向けに感情を制限する

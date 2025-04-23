@@ -1,10 +1,10 @@
-import { TalkStyle } from "../messages/messages";
+import { KoeiromapTalkStyle } from "../messages/messages";
 
 export async function koeiromapV0(
   message: string,
   speakerX: number,
   speakerY: number,
-  style: TalkStyle
+  style: KoeiromapTalkStyle
 ) {
   const param = {
     method: "POST",

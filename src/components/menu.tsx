@@ -1,5 +1,5 @@
 import { IconButton } from "./iconButton";
-import { Message } from "@/features/messages/messages";
+import { Message, VoiceEngine } from "@/features/messages/messages";
 import { KoeiroParam } from "@/features/constants/koeiroParam";
 import { ChatLog } from "./chatLog";
 import React, { useCallback, useContext, useRef, useState } from "react";
@@ -15,6 +15,7 @@ type Props = {
   chatLog: Message[];
   koeiroParam: KoeiroParam;
   assistantMessage: string;
+  voiceEngine: VoiceEngine;
   koeiromapKey: string;
   onChangeSystemPrompt: (systemPrompt: string) => void;
   onChangeAiKey: (key: string) => void;
@@ -32,6 +33,7 @@ export const Menu = ({
   chatLog,
   koeiroParam,
   assistantMessage,
+  voiceEngine,
   koeiromapKey,
   onChangeSystemPrompt,
   onChangeAiKey,
@@ -138,6 +140,7 @@ export const Menu = ({
           openAiKey={openAiKey}
           chatLog={chatLog}
           systemPrompt={systemPrompt}
+          voiceEngine={voiceEngine}
           koeiroParam={koeiroParam}
           koeiromapKey={koeiromapKey}
           onClickClose={() => {

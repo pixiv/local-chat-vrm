@@ -1,10 +1,12 @@
 import { useState, useCallback } from "react";
 import { Link } from "./link";
 import { ChatEngine } from "@/features/chat/chat";
+import { VoiceEngine } from "@/features/messages/messages";
 
 type Props = {
   chatEngine: ChatEngine;
   openAiKey: string;
+  voiceEngine: VoiceEngine;
   koeiroMapKey: string;
   onChangeAiKey: (openAiKey: string) => void;
   onChangeKoeiromapKey: (koeiromapKey: string) => void;
@@ -13,6 +15,7 @@ type Props = {
 export const Introduction = ({
   chatEngine,
   openAiKey,
+  voiceEngine,
   koeiroMapKey,
   onChangeAiKey,
   onChangeKoeiromapKey,
@@ -79,26 +82,27 @@ export const Introduction = ({
             each model.
           </div>
         </div>
-
-        <div className="my-24">
-          <div className="my-8 font-bold typography-20 text-secondary">
-            Koeiromap API Key
+        {voiceEngine === "Koeiromap" && (
+          <div className="my-24">
+            <div className="my-8 font-bold typography-20 text-secondary">
+              Koeiromap API Key
+            </div>
+            <input
+              type="text"
+              placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+              value={koeiroMapKey}
+              onChange={handleKoeiromapKeyChange}
+              className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
+            ></input>
+            <div>
+              Please create your API key on rinna Developers.
+              <Link
+                url="https://developers.rinna.co.jp/product/#product=koeiromap-free"
+                label="More info"
+              />
+            </div>
           </div>
-          <input
-            type="text"
-            placeholder="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-            value={koeiroMapKey}
-            onChange={handleKoeiromapKeyChange}
-            className="my-4 px-16 py-8 w-full h-40 bg-surface3 hover:bg-surface3-hover rounded-4 text-ellipsis"
-          ></input>
-          <div>
-            Please create your API key on rinna Developers.
-            <Link
-              url="https://developers.rinna.co.jp/product/#product=koeiromap-free"
-              label="More info"
-            />
-          </div>
-        </div>
+        )}
         {chatEngine === "OpenAI" && (
           <div className="my-24">
             <div className="my-8 font-bold typography-20 text-secondary">
