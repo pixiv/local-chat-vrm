@@ -2,6 +2,8 @@ import { MessageInput } from "@/components/messageInput";
 import { useState, useEffect, useCallback } from "react";
 
 type Props = {
+  transcribe: () => Promise<string>;
+  stopTranscribing: () => void;
   isChatProcessing: boolean;
   onChatProcessStart: (text: string) => void;
 };
@@ -13,69 +15,30 @@ type Props = {
  *
  */
 export const MessageInputContainer = ({
+  transcribe,
+  stopTranscribing,
   isChatProcessing,
   onChatProcessStart,
 }: Props) => {
   const [userMessage, setUserMessage] = useState("");
-  const [speechRecognition, setSpeechRecognition] =
-    useState<SpeechRecognition>();
   const [isMicRecording, setIsMicRecording] = useState(false);
 
-  // 音声認識の結果を処理する
-  const handleRecognitionResult = useCallback(
-    (event: SpeechRecognitionEvent) => {
-      const text = event.results[0][0].transcript;
-      setUserMessage(text);
-
-      // 発言の終了時
-      if (event.results[0].isFinal) {
-        setUserMessage(text);
-        // 返答文の生成を開始
-        onChatProcessStart(text);
-      }
-    },
-    [onChatProcessStart]
-  );
-
-  // 無音が続いた場合も終了する
-  const handleRecognitionEnd = useCallback(() => {
-    setIsMicRecording(false);
-  }, []);
-
-  const handleClickMicButton = useCallback(() => {
+  const handleClickMicButton = useCallback(async () => {
     if (isMicRecording) {
-      speechRecognition?.abort();
-      setIsMicRecording(false);
-
+      stopTranscribing();
       return;
     }
 
-    speechRecognition?.start();
     setIsMicRecording(true);
-  }, [isMicRecording, speechRecognition]);
+    const transcription = await transcribe();
+    setUserMessage(transcription);
+    onChatProcessStart(transcription);
+    setIsMicRecording(false);
+  }, [isMicRecording, onChatProcessStart, stopTranscribing, transcribe]);
 
   const handleClickSendButton = useCallback(() => {
     onChatProcessStart(userMessage);
   }, [onChatProcessStart, userMessage]);
-
-  useEffect(() => {
-    const SpeechRecognition =
-      window.webkitSpeechRecognition || window.SpeechRecognition;
-
-    // FirefoxなどSpeechRecognition非対応環境対策
-    if (!SpeechRecognition) {
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.interimResults = true; // 認識の途中結果を返す
-    recognition.continuous = false; // 発言の終了時に認識を終了する
-
-    recognition.addEventListener("result", handleRecognitionResult);
-    recognition.addEventListener("end", handleRecognitionEnd);
-
-    setSpeechRecognition(recognition);
-  }, [handleRecognitionResult, handleRecognitionEnd]);
 
   useEffect(() => {
     if (!isChatProcessing) {

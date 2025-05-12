@@ -16,11 +16,16 @@ import { Menu } from "@/components/menu";
 import { GitHubLink } from "@/components/githubLink";
 import { Meta } from "@/components/meta";
 import { DEFAULT_CHAT_ENGINE, useChat } from "@/features/chat/chat";
+import {
+  DEFAULT_TRANSCRIPTION_ENGINE,
+  useTranscription,
+} from "@/features/transcription/transcription";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);
 
   const [loadingRequired, setLoadingRequired] = useState(true);
+  const [transcriptionEngine] = useState(DEFAULT_TRANSCRIPTION_ENGINE);
   const [chatEngine] = useState(DEFAULT_CHAT_ENGINE);
   const [voiceEngine] = useState(DEFAULT_VOICE_ENGINE);
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
@@ -32,6 +37,11 @@ export default function Home() {
   const [assistantMessage, setAssistantMessage] = useState("");
 
   const { load: loadChatModel, getChatResponseStream } = useChat();
+  const {
+    load: loadTranscriptionModel,
+    transcribe,
+    stopTranscribing,
+  } = useTranscription();
 
   useEffect(() => {
     if (window.localStorage.getItem("chatVRMParams")) {
@@ -89,11 +99,20 @@ export default function Home() {
     }
 
     await Promise.all([
+      loadTranscriptionModel(transcriptionEngine),
       loadChatModel(chatEngine, systemPrompt),
       speakCharacter.load(voiceEngine),
     ]);
     setLoadingRequired(false);
-  }, [chatEngine, voiceEngine, loadChatModel, loadingRequired, systemPrompt]);
+  }, [
+    chatEngine,
+    voiceEngine,
+    loadChatModel,
+    loadingRequired,
+    loadTranscriptionModel,
+    systemPrompt,
+    transcriptionEngine,
+  ]);
 
   /**
    * 文ごとに音声を直列でリクエストしながら再生する
@@ -245,6 +264,8 @@ export default function Home() {
       />
       <VrmViewer />
       <MessageInputContainer
+        transcribe={transcribe}
+        stopTranscribing={stopTranscribing}
         isChatProcessing={chatProcessing}
         onChatProcessStart={handleSendChat}
       />
