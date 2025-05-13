@@ -13,12 +13,15 @@ declare global {
         expectedInputs,
         temperature,
         topK,
-        systemPrompt,
+        initialPrompts,
       }?: {
         expectedInputs?: { type: "image" | "audio" }[];
         temperature?: number;
         topK?: number;
-        systemPrompt?: string;
+        initialPrompts?: {
+          role: "system" | "user" | "assistant";
+          content: string;
+        }[];
       }) => Promise<GeminiNanoSession>;
     };
   }
@@ -41,7 +44,11 @@ export const useGeminiNanoChat = () => {
       throw Error("Gemini Nano is not ready");
     }
 
-    const options = systemPrompt ? { systemPrompt } : {};
+    const options = systemPrompt
+      ? {
+          initialPrompts: [{ role: "system" as const, content: systemPrompt }],
+        }
+      : {};
     setSession(await window.LanguageModel.create(options));
   }, []);
 
