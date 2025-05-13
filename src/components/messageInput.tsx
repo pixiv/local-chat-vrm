@@ -8,14 +8,16 @@ type Props = {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onClickSendButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  onClickMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onPointerDownMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onPointerUpMicButton: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 export const MessageInput = ({
   userMessage,
   isMicRecording,
   isChatProcessing,
   onChangeUserMessage,
-  onClickMicButton,
+  onPointerDownMicButton,
+  onPointerUpMicButton,
   onClickSendButton,
 }: Props) => {
   return (
@@ -28,7 +30,8 @@ export const MessageInput = ({
               className="bg-secondary hover:bg-secondary-hover active:bg-secondary-press disabled:bg-secondary-disabled"
               isProcessing={isMicRecording}
               disabled={isChatProcessing}
-              onClick={onClickMicButton}
+              onPointerDown={onPointerDownMicButton}
+              onPointerUp={onPointerUpMicButton}
             />
             <input
               type="text"

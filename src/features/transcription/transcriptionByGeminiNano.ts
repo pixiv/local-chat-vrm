@@ -1,11 +1,15 @@
 import { useCallback, useRef } from "react";
 import { GeminiNanoSession } from "../chat/geminiNanoChat";
 
+const MAX_RECORDING_TIME_MS = 30000;
+const MIN_RECORDING_TIME_MS = 400;
+
 export const useTranscriptionByGeminiNano = () => {
   const sessionRef = useRef<GeminiNanoSession | null>(null);
   const recordResolveRef = useRef<
     ((value: void | PromiseLike<void>) => void) | null
   >(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
 
   const load = useCallback(async () => {
     if (
@@ -21,12 +25,27 @@ export const useTranscriptionByGeminiNano = () => {
         expectedInputs: [{ type: "audio" }],
       });
     }
+
+    if (mediaStreamRef.current === null) {
+      mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+    }
+  }, []);
+
+  const stopTranscribing = useCallback(() => {
+    if (recordResolveRef.current) {
+      recordResolveRef.current();
+      recordResolveRef.current = null;
+    }
   }, []);
 
   const transcribe = useCallback(async () => {
-    const mediaStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-    });
+    const mediaStream = mediaStreamRef.current;
+    if (mediaStream === null) {
+      throw Error("Media stream is not ready.");
+    }
+
     const mediaRecorder = new MediaRecorder(mediaStream);
     const audioChunks: BlobPart[] = [];
 
@@ -35,12 +54,19 @@ export const useTranscriptionByGeminiNano = () => {
     };
 
     mediaRecorder.start();
+    const startDate = Date.now();
     await new Promise((resolve) => {
+      setTimeout(stopTranscribing, MAX_RECORDING_TIME_MS);
       recordResolveRef.current = resolve;
     });
     mediaRecorder.stop();
+    const recordingTime = Date.now() - startDate;
 
     await new Promise((r) => (mediaRecorder.onstop = r));
+
+    if (recordingTime < MIN_RECORDING_TIME_MS) {
+      return "";
+    }
 
     const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
 
@@ -53,14 +79,7 @@ export const useTranscriptionByGeminiNano = () => {
       { type: "audio", content: blob },
       "Transcribe this short audio.",
     ]);
-  }, []);
-
-  const stopTranscribing = useCallback(() => {
-    if (recordResolveRef.current) {
-      recordResolveRef.current();
-      recordResolveRef.current = null;
-    }
-  }, []);
+  }, [stopTranscribing]);
 
   return { load, transcribe, stopTranscribing };
 };
