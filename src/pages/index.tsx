@@ -128,25 +128,33 @@ export default function Home() {
     [viewer, koeiromapKey]
   );
 
+  const handleStopTranscribing = useCallback(() => {
+    stopTranscribing();
+    setChatProcessing(true);
+  }, [stopTranscribing]);
+
   /**
    * アシスタントとの会話を行う
    */
   const handleSendChat = useCallback(
     async (text: string) => {
+      setChatProcessing(true);
+
       if (chatEngine === "OpenAI" && !openAiKey) {
         setAssistantMessage("APIキーが入力されていません");
+        setChatProcessing(false);
         return;
       }
 
-      const newMessage = text;
+      if (text === "") {
+        setChatProcessing(false);
+        return;
+      }
 
-      if (newMessage == null) return;
-
-      setChatProcessing(true);
       // ユーザーの発言を追加して表示
       const messageLog: Message[] = [
         ...chatLog,
-        { role: "user", content: newMessage },
+        { role: "user", content: text },
       ];
       setChatLog(messageLog);
 
@@ -265,7 +273,7 @@ export default function Home() {
       <VrmViewer />
       <MessageInputContainer
         transcribe={transcribe}
-        stopTranscribing={stopTranscribing}
+        stopTranscribing={handleStopTranscribing}
         isChatProcessing={chatProcessing}
         onChatProcessStart={handleSendChat}
       />

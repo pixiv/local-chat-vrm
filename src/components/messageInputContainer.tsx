@@ -23,28 +23,33 @@ export const MessageInputContainer = ({
   const [userMessage, setUserMessage] = useState("");
   const [isMicRecording, setIsMicRecording] = useState(false);
 
-  const handleClickMicButton = useCallback(async () => {
-    if (isMicRecording) {
-      stopTranscribing();
-      return;
-    }
-
+  const handlePointerDownMicButton = useCallback(async () => {
     setIsMicRecording(true);
     const transcription = await transcribe();
     setUserMessage(transcription);
     onChatProcessStart(transcription);
-    setIsMicRecording(false);
-  }, [isMicRecording, onChatProcessStart, stopTranscribing, transcribe]);
+  }, [onChatProcessStart, transcribe]);
+
+  const handlePointerUpMicButton = useCallback(() => {
+    if (isMicRecording) {
+      stopTranscribing();
+      setIsMicRecording(false);
+    }
+  }, [isMicRecording, stopTranscribing]);
 
   const handleClickSendButton = useCallback(() => {
     onChatProcessStart(userMessage);
   }, [onChatProcessStart, userMessage]);
 
   useEffect(() => {
-    if (!isChatProcessing) {
+    if (isChatProcessing) {
+      if (isMicRecording) {
+        setIsMicRecording(false);
+      }
+    } else {
       setUserMessage("");
     }
-  }, [isChatProcessing]);
+  }, [isChatProcessing, isMicRecording]);
 
   return (
     <MessageInput
@@ -52,7 +57,8 @@ export const MessageInputContainer = ({
       isChatProcessing={isChatProcessing}
       isMicRecording={isMicRecording}
       onChangeUserMessage={(e) => setUserMessage(e.target.value)}
-      onClickMicButton={handleClickMicButton}
+      onPointerDownMicButton={handlePointerDownMicButton}
+      onPointerUpMicButton={handlePointerUpMicButton}
       onClickSendButton={handleClickSendButton}
     />
   );
