@@ -75,10 +75,15 @@ export const useTranscriptionByGeminiNano = () => {
       throw Error("Gemini Nano for Transcription is not ready.");
     }
 
-    return await sessionRef.current.prompt([
-      { type: "audio", content: blob },
-      "Transcribe this short audio.",
-    ]);
+    try {
+      return await sessionRef.current.prompt([
+        { type: "audio", content: blob },
+        "Transcribe this short audio.",
+      ]);
+    } catch (e) {
+      console.error(e)
+      return ""
+    }
   }, [stopTranscribing]);
 
   return { load, transcribe, stopTranscribing };
