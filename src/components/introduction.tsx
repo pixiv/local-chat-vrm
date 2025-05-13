@@ -140,6 +140,11 @@ export const Introduction = ({
             Get Started
           </button>
         </div>
+        {loading && (
+          <div className="my-16">
+            Downloading and loading AI models. This may take a minute.
+          </div>
+        )}
       </div>
     </div>
   ) : null;
