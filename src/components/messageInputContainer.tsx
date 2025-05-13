@@ -43,9 +43,7 @@ export const MessageInputContainer = ({
 
   useEffect(() => {
     if (isChatProcessing) {
-      if (isMicRecording) {
-        setIsMicRecording(false);
-      }
+      setIsMicRecording(false);
     } else {
       setUserMessage("");
     }
