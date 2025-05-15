@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import { Message } from "../messages/messages";
 import { useCallback, useState } from "react";
 
@@ -23,16 +23,12 @@ export const useOpenAiChat = () => {
         ...messageLog,
       ];
 
-      const configuration = new Configuration({
+      const openai = new OpenAI({
         apiKey: apiKey,
+        dangerouslyAllowBrowser: true,
       });
-      // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
-      // https://github.com/openai/openai-node/issues/6#issuecomment-1492814621
-      delete configuration.baseOptions.headers["User-Agent"];
 
-      const openai = new OpenAIApi(configuration);
-
-      const { data } = await openai.createChatCompletion({
+      const data = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: messages,
       });
