@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Link } from "./link";
 import { ChatEngine } from "@/features/chat/chat";
 import { VoiceEngine } from "@/features/messages/messages";
+import { LoadingSpinnerIcon } from "./loadingSpinnerIcon";
 
 type Props = {
   chatEngine: ChatEngine;
@@ -141,8 +142,13 @@ export const Introduction = ({
           </button>
         </div>
         {loading && (
-          <div className="my-16">
-            Downloading and loading AI models. This may take a minute.
+          <div className="my-16 flex font-bold">
+            <div className="my-auto mr-8">
+              <LoadingSpinnerIcon />
+            </div>
+            <div>
+              Downloading and loading AI models. This may take a minute.
+            </div>
           </div>
         )}
       </div>
