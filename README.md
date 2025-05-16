@@ -1,71 +1,71 @@
-# ChatVRM
+# LocalChatVRM
 
-ChatVRMは、技術共有およびデモンストレーションを主目的としたプロジェクトです。
+LocalChatVRM is a project primarily for technical sharing and demonstration purposes. It was used for a demo exhibition at Google I/O 2025.
 
-本レポジトリは、2024-07-18時点のコードを持ってアーカイブされました。
-今後、ChatVRMに対して変更を加えたい場合、フォークを行って開発いただけますと幸いです。
+**This repository is archived.**
+If you wish to make changes to LocalChatVRM, please feel free to fork the repository and develop it further.
 
 ---
 
-ChatVRMはブラウザで簡単に3Dキャラクターと会話ができるデモアプリケーションです。
+LocalChatVRM is a demo application that allows you to easily converse with 3D characters in your browser. Based on [ChatVRM](https://github.com/pixiv/ChatVRM), it operates locally in the browser by utilizing Chrome Built-in AI and Kokoro.js.
 
-VRMファイルをインポートしてキャラクターに合わせた声の調整や、感情表現を含んだ返答文の生成などを行うことができます。
+You can import VRM files to adjust the voice to match the character and generate responses that include emotional expressions.
 
-ChatVRMの各機能は主に以下の技術を使用しています。
+The main features of LocalChatVRM utilize the following technologies:
 
-- ユーザーの音声の認識
-    - [Web Speech API(SpeechRecognition)](https://developer.mozilla.org/ja/docs/Web/API/SpeechRecognition)
-- 返答文の生成
-    - [ChatGPT API](https://platform.openai.com/docs/api-reference/chat)
-- 読み上げ音声の生成
-    - [Koemotion/Koeiromap API](https://koemotion.rinna.co.jp/)
-- 3Dキャラクターの表示
+- User voice recognition
+    - Chrome Built-in AI Multimodality APIs
+- Response generation
+    - [Chrome Built-in AI APIs](https://developer.chrome.com/docs/ai/built-in)
+- Speech synthesis
+    - [Kokoro](https://github.com/hexgrad/kokoro)
+- 3D character display
     - [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
 
+## Execution
 
-## デモ
-
-Glitchでデモを公開しています。
-
-[https://chatvrm.glitch.me](https://chatvrm.glitch.me)
-
-## 実行
-ローカル環境で実行する場合はこのリポジトリをクローンするか、ダウンロードしてください。
+To run in a local environment, clone or download this repository.
 
 ```bash
-git clone git@github.com:pixiv/ChatVRM.git
+git clone git@github.com:pixiv/local-chat-vrm.git
 ```
 
-必要なパッケージをインストールしてください。
+Install the necessary packages.
+
 ```bash
 npm install
 ```
 
-パッケージのインストールが完了した後、以下のコマンドで開発用のWebサーバーを起動します。
+After the packages are installed, start the development web server with the following command:
+
 ```bash
 npm run dev
 ```
 
-実行後、以下のURLにアクセスして動作を確認して下さい。
+Once running, access the following URL in your browser to verify operation:
 
-[http://localhost:3000](http://localhost:3000) 
+[http://localhost:5173](http://localhost:5173)
 
+-----
 
----
+## Chrome Built-in AI APIs
 
-## ChatGPT API
+LocalChatVRM uses Chrome Built-in AI APIs for text generation.
 
-ChatVRMでは返答文の生成にChatGPT APIを使用しています。
+Configuration of Google Chrome is required to use Chrome Built-in AI. Please refer to the following link for setup instructions:
 
-ChatGPT APIの仕様や利用規約については以下のリンクや公式サイトをご確認ください。
+https://developer.chrome.com/docs/ai/get-started
 
-- [https://platform.openai.com/docs/api-reference/chat](https://platform.openai.com/docs/api-reference/chat)
-- [https://openai.com/policies/api-data-usage-policies](https://openai.com/policies/api-data-usage-policies)
+## Chrome Built-in AI Multimodality APIs
 
+LocalChatVRM uses Chrome Built-in AI Multimodality APIs for voice recognition.
 
-## Koeiromap API
-ChatVRMでは返答文の音声読み上げにKoemotionのKoeiromap APIを使用しています。
+As of May 19, 2025, Chrome Built-in AI Multimodality APIs are only available in limited environments.
 
-Koeiromap APIの仕様や利用規約については以下のリンクや公式サイトをご確認ください。
+In environments where Chrome Built-in AI Multimodality APIs are not available, you can use the SpeechSynthesis API by making the following modification:
 
-- [https://koemotion.rinna.co.jp/](https://koemotion.rinna.co.jp/)
+Assign `"SpeechSynthesis"` to `DEFAULT_TRANSCRIPTION_ENGINE` in `src/features/transcription/transcription.ts`.
+
+```typescript
+export const DEFAULT_TRANSCRIPTION_ENGINE: TranscriptionEngine = "SpeechSynthesis";
+```
