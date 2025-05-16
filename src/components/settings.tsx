@@ -12,6 +12,9 @@ import {
 import { Link } from "./link";
 import { ChatEngine } from "@/features/chat/chat";
 
+const CHARACTER_SETTINGS_DISABLED = import.meta.env
+  .VITE_CHARACTER_SETTINGS_DISABLED;
+
 type Props = {
   chatEngine: ChatEngine;
   openAiKey: string;
@@ -70,6 +73,43 @@ export const Settings = ({
       </div>
       <div className="max-h-full overflow-auto">
         <div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
+          <div className="my-24 typography-32 font-bold">Overview</div>
+          <div className="my-16 typography-20 font-bold">About VRoid</div>
+          <div>
+            <p>The 3D model used in this demo was created with VRoid.</p>
+            <p>
+              The VRoid project is a 3D business by Pixiv Inc. with the
+              philosophy of "Make Creativities More Enjoyable"
+            </p>
+            <p>
+              The world of "one person, one avatar" where everyone has their own
+              unique 3D character model and can utilize that character for
+              creative activities and communication. Our mission is to realize
+              that future with the power of technology and creativity.
+            </p>
+            <Link url="https://vroid.com/en" label="Learn more" />
+          </div>
+          <div className="my-16 typography-20 font-bold">About Repository</div>
+          <div className="my-16 font-bold">
+            {CHARACTER_SETTINGS_DISABLED && (
+              <p>
+                In this demo, editing the Settings is disabled. To use a fully
+                editable version of the application, please clone our public
+                repository from GitHub and run it on your local machine.
+              </p>
+            )}
+            <Link
+              url={"https://github.com/pixiv/local-chat-vrm"}
+              label="https://github.com/pixiv/local-chat-vrm"
+            />
+            <img
+              alt="https://github.com/pixiv/ChatVRM"
+              height={80}
+              width={80}
+              src={"./github-qr.svg"}
+              className="my-16"
+            />
+          </div>
           <div className="my-24 typography-32 font-bold">Settings</div>
           {chatEngine === "OpenAI" && (
             <div className="my-24">
@@ -103,7 +143,10 @@ export const Settings = ({
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">3D model</div>
             <div className="my-8">
-              <TextButton onClick={onClickOpenVrmFile}>
+              <TextButton
+                onClick={onClickOpenVrmFile}
+                disabled={CHARACTER_SETTINGS_DISABLED}
+              >
                 Open VRM File
               </TextButton>
             </div>
@@ -113,7 +156,10 @@ export const Settings = ({
               <div className="my-16 typography-20 font-bold">
                 Character Settings (System Prompt)
               </div>
-              <TextButton onClick={onClickResetSystemPrompt}>
+              <TextButton
+                onClick={onClickResetSystemPrompt}
+                disabled={CHARACTER_SETTINGS_DISABLED}
+              >
                 Reset Character Settings
               </TextButton>
             </div>
@@ -122,7 +168,7 @@ export const Settings = ({
               value={systemPrompt}
               onChange={onChangeSystemPrompt}
               className="px-16 py-8  bg-surface1 hover:bg-surface1-hover h-168 rounded-8 w-full"
-              disabled={isLoading}
+              disabled={CHARACTER_SETTINGS_DISABLED || isLoading}
             ></textarea>
           </div>
           {voiceEngine === "Koeiromap" && (
