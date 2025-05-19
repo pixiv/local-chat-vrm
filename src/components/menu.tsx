@@ -111,7 +111,7 @@ export const Menu = ({
         <div className="grid grid-flow-col gap-[8px]">
           <IconButton
             iconName="24/Menu"
-            label="Settings"
+            label="Overview & Settings"
             isProcessing={false}
             onClick={() => setShowSettings(true)}
           ></IconButton>
