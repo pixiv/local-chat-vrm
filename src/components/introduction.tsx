@@ -65,10 +65,10 @@ export const Introduction = ({
             Technology
           </div>
           <div>
-            This application utilizes @pixiv/three-vrm for displaying and
-            manipulating 3D models, Gemini Nano (a local LLM running in your
-            browser) for generating conversation text, and the Web Speech
-            API&#39;s SpeechSynthesis interface for voice synthesis.
+            This application leverages the @pixiv/three-vrm library for 3D model
+            rendering and manipulation, and employs Gemini Nano, a locally
+            executed Large Language Model (LLM) operating within the browser
+            environment, for conversational text generation and voice synthesis.
           </div>
         </div>
 
