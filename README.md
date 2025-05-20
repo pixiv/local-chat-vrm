@@ -7,7 +7,7 @@ If you wish to make changes to LocalChatVRM, please feel free to fork the reposi
 
 ---
 
-LocalChatVRM is a demo application that allows you to easily converse with 3D characters in your browser. Based on [ChatVRM](https://github.com/pixiv/ChatVRM), it operates locally in the browser by utilizing Chrome Built-in AI and Kokoro.js.
+LocalChatVRM is a demo application that allows you to easily converse with 3D characters in your browser. Based on [ChatVRM](https://github.com/pixiv/ChatVRM) [^1], it operates locally in the browser by utilizing Chrome Built-in AI and Kokoro.js.
 
 You can import VRM files to adjust the voice to match the character and generate responses that include emotional expressions.
 
@@ -75,3 +75,5 @@ Assign `"SpeechSynthesis"` to `DEFAULT_TRANSCRIPTION_ENGINE` in `src/features/tr
 ```typescript
 export const DEFAULT_TRANSCRIPTION_ENGINE: TranscriptionEngine = "SpeechSynthesis";
 ```
+
+[^1]: Licensed under the [MIT License](https://github.com/pixiv/ChatVRM/blob/main/LICENSE). Copyright (c) pixiv 2023
