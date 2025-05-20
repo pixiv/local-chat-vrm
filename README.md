@@ -22,6 +22,12 @@ The main features of LocalChatVRM utilize the following technologies:
 - 3D character display
     - [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
 
+## Demo
+
+A live demo is available on GitHub Pages. Please note that it will only function correctly in environments where the Chrome Built-in AI Multimodality APIs are supported.
+
+https://pixiv.github.io/local-chat-vrm
+
 ## Execution
 
 To run in a local environment, clone or download this repository.
