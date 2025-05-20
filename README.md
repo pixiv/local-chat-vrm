@@ -26,7 +26,7 @@ The main features of LocalChatVRM utilize the following technologies:
 
 A live demo is available on GitHub Pages. Please note that it will only function correctly in environments where the Chrome Built-in AI Multimodality APIs are supported.
 
-https://pixiv.github.io/local-chat-vrm
+https://pixiv.github.io/local-chat-vrm/
 
 ## Execution
 
