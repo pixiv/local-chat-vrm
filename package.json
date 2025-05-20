@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@charcoal-ui/icons": "^4.5.0",
-    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/dom-speech-recognition": "^0.0.1",
     "eslint": "9.26.0",
     "kokoro-js": "^1.2.0",
