@@ -29,7 +29,7 @@ declare global {
 
 export type GeminiNanoSession = {
   prompt: (
-    prompt: string | ({ type: string; content: AudioBuffer | Blob } | string)[]
+    prompt: string | ({ role: "user", content: { type: "text" | "audio", value: AudioBuffer | Blob | string}[] })[]
   ) => Promise<string>;
   promptStreaming: (
     prompt: string | ({ type: string; content: AudioBuffer } | string)[]

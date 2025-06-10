@@ -77,8 +77,13 @@ export const useTranscriptionByGeminiNano = () => {
 
     try {
       return await sessionRef.current.prompt([
-        { type: "audio", content: blob },
-        "Transcribe this short audio.",
+        {
+          role: "user",
+          content: [
+            { type: "text", value: "Transcribe this short audio." },
+            { type: "audio", value: blob },
+          ],
+        },
       ]);
     } catch (e) {
       console.error(e)
